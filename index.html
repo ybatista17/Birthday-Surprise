@@ -168,6 +168,9 @@ input:focus{border-color:var(--crown);outline:none}
 .epigraph blockquote{margin:0;font-family:var(--font-display);font-style:italic;font-size:clamp(1.05rem,2.4vw,1.2rem);line-height:1.5;color:var(--ink);text-wrap:balance}
 .epigraph figcaption{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .epigraph figcaption:empty{display:none}
+.hbd{opacity:0;transform:translateY(14px);transition:opacity 1.4s ease,transform 1.4s cubic-bezier(.2,.8,.3,1)}
+.hbd.show{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.hbd{transform:none}}
 footer{padding-block:24px 64px;text-align:center}
 footer p{font-family:var(--font-display);font-size:1.6rem;font-style:italic;color:var(--ink)}
 footer small{display:block;margin-top:6px;color:var(--ink-soft);font-size:.82rem}
@@ -312,7 +315,7 @@ dentro de sí, escondida, la luz de aquellas flores</blockquote>
     <!-- Put the credit between the two figcaption tags, for example: Pablo Neruda, Soneto XVII -->
     <figcaption>Pablo Neruda, Soneto XVII</figcaption>
   </figure>
-  <p>Happy Birthday! Here's to a summer full of <span class="bb">blue blossoms</span>!</p>
+  <p class="hbd" id="hbd">Happy Birthday! Here's to a summer full of <span class="bb">blue blossoms</span>!</p>
   <small>Each flower opens for about a day, so go look every morning in July.</small>
   <div class="sync" id="sync"><i></i><span id="sync-t">Saving on this device</span></div>
 </footer>
@@ -543,6 +546,15 @@ loadLocal(); setSync(); render();
     if(y<=h+50)plx.style.transform=`translate3d(0,${(y*.38).toFixed(1)}px,0)`;}
   addEventListener("scroll",()=>{if(!ticking){ticking=true;requestAnimationFrame(upd);}},{passive:true});
   upd();
+})();
+
+/* ---------- the birthday message waits at the very bottom ---------- */
+(function(){
+  const el=document.getElementById("hbd");if(!el)return;
+  function check(){const doc=document.documentElement;
+    if(window.innerHeight+window.scrollY>=doc.scrollHeight-6){el.classList.add("show");removeEventListener("scroll",check);removeEventListener("resize",check);}}
+  addEventListener("scroll",check,{passive:true});addEventListener("resize",check);
+  setTimeout(check,600);
 })();
 
 /* ---------- folds remember whether they were open ---------- */
